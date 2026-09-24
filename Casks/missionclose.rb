@@ -13,13 +13,11 @@ cask "missionclose" do
   end
 
   auto_updates false
-  depends_on macos: ">= :ventura"
+  depends_on macos: :ventura
 
   app "MissionClose.app"
 
   uninstall quit: "com.beqa.MissionClose"
 
-  zap trash: [
-    "~/Library/Preferences/com.beqa.MissionClose.plist",
-  ]
+  zap trash: "~/Library/Preferences/com.beqa.MissionClose.plist"
 end
