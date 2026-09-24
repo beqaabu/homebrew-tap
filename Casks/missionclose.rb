@@ -19,5 +19,14 @@ cask "missionclose" do
 
   uninstall quit: "com.beqa.MissionClose"
 
+  caveats <<~EOS
+    MissionClose is not notarized by Apple, so macOS blocks it the first time you open it.
+    Open System Settings -> Privacy & Security and click "Open Anyway", or reinstall with:
+      brew install --cask --no-quarantine beqaabu/tap/missionclose
+
+    MissionClose also needs Accessibility access to read Mission Control's thumbnails and
+    press a window's buttons: System Settings -> Privacy & Security -> Accessibility.
+  EOS
+
   zap trash: "~/Library/Preferences/com.beqa.MissionClose.plist"
 end
