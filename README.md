@@ -3,6 +3,7 @@
 Homebrew tap for my macOS apps.
 
 ```sh
+brew trust --tap beqaabu/tap   # Homebrew 6+ asks you to trust third-party taps once
 brew install --cask beqaabu/tap/missionclose
 brew install --cask beqaabu/tap/snappy-app
 ```

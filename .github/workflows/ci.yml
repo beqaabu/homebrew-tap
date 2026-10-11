@@ -23,6 +23,8 @@ jobs:
           taps="$(brew --repository)/Library/Taps/beqaabu"
           mkdir -p "$taps"
           ln -s "$GITHUB_WORKSPACE" "$taps/homebrew-tap"
+          # Homebrew 6+ refuses to load casks from third-party taps until they're trusted.
+          brew trust --tap beqaabu/tap
 
       - name: Style
         run: brew style beqaabu/tap
@@ -39,5 +41,7 @@ jobs:
       - name: Renamed casks still resolve
         run: |
           for old in $(jq -r 'keys[]' cask_renames.json); do
-            brew info --cask "beqaabu/tap/$old" | head -1
+            new=$(brew info --cask --json=v2 "beqaabu/tap/$old" | jq -r '.casks[0].token')
+            echo "$old -> $new"
+            [[ "$new" == "$(jq -r --arg old "$old" '.[$old]' cask_renames.json)" ]]
           done
