@@ -1,0 +1,47 @@
+name: CI
+
+# Checks every cask: style, Homebrew's audit (including that download URLs work),
+# and a real download to verify each sha256. Also runs on the release bots' version bumps.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  casks:
+    runs-on: macos-latest
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      # The audit calls the GitHub API; unauthenticated calls share a tiny per-IP limit on runners.
+      HOMEBREW_GITHUB_API_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Use this checkout as the beqaabu/tap tap
+        run: |
+          taps="$(brew --repository)/Library/Taps/beqaabu"
+          mkdir -p "$taps"
+          ln -s "$GITHUB_WORKSPACE" "$taps/homebrew-tap"
+          # Homebrew 6+ refuses to load casks from third-party taps until they're trusted.
+          brew trust --tap beqaabu/tap
+
+      - name: Style
+        run: brew style beqaabu/tap
+
+      - name: Audit
+        run: brew audit --cask --online --tap beqaabu/tap
+
+      - name: Download and verify checksums
+        run: |
+          for cask in Casks/*.rb; do
+            brew fetch --cask "beqaabu/tap/$(basename "$cask" .rb)"
+          done
+
+      - name: Renamed casks still resolve
+        run: |
+          for old in $(jq -r 'keys[]' cask_renames.json); do
+            new=$(brew info --cask --json=v2 "beqaabu/tap/$old" | jq -r '.casks[0].token')
+            echo "$old -> $new"
+            [[ "$new" == "$(jq -r --arg old "$old" '.[$old]' cask_renames.json)" ]]
+          done
