@@ -1,6 +1,6 @@
 cask "snappy" do
-  version "1.0.0"
-  sha256 "34250a36d5fb8d34f1740475821c66d627b82eb23521039d4a4dc153137bd3b9"
+  version "1.1.0"
+  sha256 "95df04ccb4e32653f2c4d718c9d6e223b0f2afa582abcda61592cd892788b7eb"
 
   url "https://github.com/beqaabu/Snappy/releases/download/v#{version}/Snappy-#{version}.zip"
   name "Snappy"
