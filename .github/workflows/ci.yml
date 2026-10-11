@@ -1,0 +1,35 @@
+name: CI
+
+# Checks every cask: style, Homebrew's audit (including that download URLs work),
+# and a real download to verify each sha256. Also runs on the release bots' version bumps.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  casks:
+    runs-on: macos-latest
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Use this checkout as the beqaabu/tap tap
+        run: |
+          taps="$(brew --repository)/Library/Taps/beqaabu"
+          mkdir -p "$taps"
+          ln -s "$GITHUB_WORKSPACE" "$taps/homebrew-tap"
+
+      - name: Style
+        run: brew style beqaabu/tap
+
+      - name: Audit
+        run: brew audit --cask --online --tap beqaabu/tap
+
+      - name: Download and verify checksums
+        run: |
+          for cask in Casks/*.rb; do
+            brew fetch --cask "beqaabu/tap/$(basename "$cask" .rb)"
+          done
