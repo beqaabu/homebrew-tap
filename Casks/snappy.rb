@@ -23,8 +23,8 @@ cask "snappy" do
 
   caveats <<~EOS
     Snappy is not notarized by Apple, so macOS blocks it the first time you open it.
-    Open System Settings -> Privacy & Security and click "Open Anyway", or reinstall with:
-      brew install --cask --no-quarantine beqaabu/tap/snappy
+    Open System Settings -> Privacy & Security and click "Open Anyway", or run:
+      xattr -dr com.apple.quarantine "#{appdir}/Snappy.app"
 
     Snappy also needs Screen Recording access to take screenshots:
     System Settings -> Privacy & Security -> Screen & System Audio Recording.
