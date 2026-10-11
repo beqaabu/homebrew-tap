@@ -1,6 +1,6 @@
 cask "missionclose" do
-  version "0.3.1"
-  sha256 "dd05cc540311b39fb47a0ed9305572d4bc52e907be25f71b0be5b5eb718b83f3"
+  version "0.4.0"
+  sha256 "2358aac1b84a09c3e60c8f784753b94dbb4c1713a237e20110ed4420465f607e"
 
   url "https://github.com/beqaabu/MissionClose/releases/download/v#{version}/MissionClose-#{version}.zip"
   name "MissionClose"
