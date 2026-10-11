@@ -1,4 +1,4 @@
-cask "snappy" do
+cask "snappy-app" do
   version "1.1.0"
   sha256 "95df04ccb4e32653f2c4d718c9d6e223b0f2afa582abcda61592cd892788b7eb"
 

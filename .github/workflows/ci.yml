@@ -35,3 +35,9 @@ jobs:
           for cask in Casks/*.rb; do
             brew fetch --cask "beqaabu/tap/$(basename "$cask" .rb)"
           done
+
+      - name: Renamed casks still resolve
+        run: |
+          for old in $(jq -r 'keys[]' cask_renames.json); do
+            brew info --cask "beqaabu/tap/$old" | head -1
+          done
